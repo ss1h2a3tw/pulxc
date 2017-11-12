@@ -1,0 +1,15 @@
+[Unit]
+Description=%i LXC
+After=network.target lxc-cgroup.service dhcpcd.service radvd.service
+Requires=lxc-cgroup.service
+
+[Service]
+User=lxc
+Group=lxc
+Type=forking
+Delegate=yes
+ExecStart=/net/lxc/startone.sh %i
+ExecStop=/net/lxc/stopone.sh %i
+
+[Install]
+WantedBy=multi-user.target

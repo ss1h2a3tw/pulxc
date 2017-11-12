@@ -1,0 +1,12 @@
+[Unit]
+Description=%i LXC
+After=local-fs.target
+
+[Service]
+User=root
+Group=root
+Type=oneshot
+ExecStart=/net/lxc/setup-cgroup.sh
+
+[Install]
+WantedBy=multi-user.target
