@@ -1,4 +1,4 @@
-.PHONY install
+.PHONY: install
 
 UID=500
 GID=500
