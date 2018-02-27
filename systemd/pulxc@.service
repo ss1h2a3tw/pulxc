@@ -1,0 +1,15 @@
+[Unit]
+Description=%i PULXC
+After=network.target pulxc-cgroup.service
+Requires=pulxc-cgroup.service
+
+[Service]
+User=pulxc
+Group=pulxc
+Type=forking
+Delegate=yes
+ExecStart=/usr/lib/pulxc/startone.sh %i
+ExecStop=/usr/lib/pulxc/stopone.sh %i
+
+[Install]
+WantedBy=multi-user.target

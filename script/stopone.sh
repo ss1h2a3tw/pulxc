@@ -1,2 +1,3 @@
 #!/bin/sh
-/usr/bin/lxc-stop -P /net/lxc/user -n $1
+source /etc/pulxc/pulxc.conf
+/usr/bin/lxc-stop -P $BASE_PATH/lxc -n $1

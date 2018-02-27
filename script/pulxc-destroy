@@ -1,0 +1,3 @@
+#!/bin/bash
+source /etc/pulxc/pulxc.conf
+lxc-destroy -P $BASE_PATH/lxc -n $1

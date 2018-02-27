@@ -1,12 +1,12 @@
 [Unit]
-Description=%i LXC
+Description=PULXC cgroup setup
 After=local-fs.target
 
 [Service]
 User=root
 Group=root
 Type=oneshot
-ExecStart=/net/lxc/setup-cgroup.sh
+ExecStart=/usr/lib/pulxc/setup-cgroup.sh
 
 [Install]
 WantedBy=multi-user.target
