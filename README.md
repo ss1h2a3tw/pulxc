@@ -21,7 +21,7 @@ make
 sudo make install
 ```
 
-##Usage
+## Usage
 
 `pulxc-create username` to create a lxc for the user
 
