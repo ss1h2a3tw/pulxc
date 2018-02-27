@@ -1,7 +1,5 @@
 #!/bin/bash
 source /etc/pulxc/pulxc.conf
-PULXC_USER="pulxc"
-PULXC_TEMPLATE="/usr/share/lxc/templates/lxc-archlinux"
 CONFIG_PATH="$BASE_PATH/lxc/$1/config"
 if [[ $1 == "" ]]; then
     echo "No Username"
@@ -12,7 +10,7 @@ if [[ $? -ne 0 ]]; then
     echo "User didn't exist!"
     exit 1
 fi
-lxc-create -P $BASE_PATH/lxc -t $PULXC_TEMPLATE -n "$1"
+lxc-create -P $BASE_PATH/lxc -t $LXC_TEMPLATE -n "$1"
 if [[ $? -ne 0 ]]; then
     exit 1
 fi
@@ -65,8 +63,8 @@ if [[ "$facl" != "" ]]; then
     done
 fi
 
-chown $BASE_SUBUID:$PULXC_USER $BASE_PATH/lxc/$1
-chown $PULXC_USER:$PULXC_USER $CONFIG_PATH
+chown $BASE_SUBUID:$USER $BASE_PATH/lxc/$1
+chown $USER:$USER $CONFIG_PATH
 sed -i 's/lxc.net.0.type = empty//g' $CONFIG_PATH
 echo "lxc.include = /usr/share/lxc/config/userns.conf" >> $CONFIG_PATH
 echo "lxc.include = /etc/pulxc/pulxc-lxc.conf" >> $CONFIG_PATH
