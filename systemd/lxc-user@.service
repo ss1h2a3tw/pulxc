@@ -1,6 +1,6 @@
 [Unit]
 Description=%i LXC
-After=network.target lxc-cgroup.service dhcpcd.service radvd.service
+After=network.target lxc-cgroup.service
 Requires=lxc-cgroup.service
 
 [Service]
