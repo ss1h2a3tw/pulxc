@@ -21,6 +21,8 @@ make
 sudo make install
 ```
 
+read INSTALL.md for more info
+
 ## Usage
 
 `pulxc-create username` to create a lxc for the user
@@ -34,3 +36,5 @@ sudo make install
 `systemctl enable pulxc@username` to make it start at boot
 
 `systemctl start pulxc-dblg@username` to log the startup, the log file will be saved at /var/lib/pulxc/log/
+
+for more info, read CONFIGURATION.md
