@@ -9,11 +9,17 @@ char buf[2000];
 char buf2[1000];
 const char key[] = "BASE_PATH";
 int main(){
-    //Avoid using getlogin for security issue
     FILE* fptr=fopen("/etc/pulxc/pulxc.conf","r");
     bool find=false;
-    while(fscanf(fptr,"%1999s=%999s",buf,buf2)==2){
-        if(strcmp(buf,key)==0){
+    while(fgets(buf,2000,fptr)){
+        char *ptr= strtok(buf,"=\n");
+        if(strcmp(ptr,key)==0){
+            ptr=strtok(NULL,"=\n");
+            if(!ptr){
+                fprintf(stderr,"Failed to get base path from config\n");
+                return 1;
+            }
+            strncpy(buf2,ptr,999);
             find=true;
         }
     }
@@ -21,6 +27,7 @@ int main(){
         fprintf(stderr,"Failed to get base path from config\n");
         return 1;
     }
+    //Avoid using getlogin for security issue
     struct passwd* pw=getpwuid(getuid());
     setreuid(geteuid(),geteuid());
     if(clearenv()){
