@@ -12,6 +12,7 @@ install: pulxc-attach
 	install -d -m 750 -o $(UID) -g $(SUBGID) /var/lib/pulxc /var/lib/pulxc/lxc /var/lib/pulxc/log
 	install -d -m 755 /etc/pulxc
 	install -d -m 755 /usr/lib/pulxc
+	install -d -m 755 /etc/pulxc
 	install -m 644 systemd/pulxc-cgroup.service /usr/lib/systemd/system
 	install -m 644 systemd/pulxc@.service /usr/lib/systemd/system
 	install -m 644 systemd/pulxc-dblg@.service /usr/lib/systemd/system
@@ -22,3 +23,5 @@ install: pulxc-attach
 	install -m 755 script/pulxc-create /usr/bin
 	install -m 755 script/pulxc-destroy /usr/bin
 	install -m 4755 pulxc-attach /usr/bin
+	install -m 644 conf/pulxc.conf /etc/pulxc
+	install -m 644 conf/pulxc-lxc.conf /etc/pulxc
