@@ -1,12 +1,19 @@
 #!/bin/bash
 for cgroup in /sys/fs/cgroup/*
 do
+    if [[ $cgroup == "/sys/fs/cgroup/systemd" ]] || [[ $cgroup == "/sys/fs/cgroup/unified" ]];
+    then
+        continue
+    fi
+    echo "adding subcontroller in $cgroup"
     rmdir $cgroup/lxc
     mkdir -p $cgroup/lxc
     chown -R lxc:lxc $cgroup/lxc
 done
 
-echo 1 > /sys/fs/cgroup/cpuset/cgroup.clone_children
-echo "0-55" > /sys/fs/cgroup/cpuset/lxc/cpuset.cpus
-echo "0-1" > /sys/fs/cgroup/cpuset/lxc/cpuset.mems
+#Change these as your system hardware!
+echo "0" > /sys/fs/cgroup/cpuset/lxc/cpuset.cpus
+echo "0" > /sys/fs/cgroup/cpuset/lxc/cpuset.mems
+echo "0" > /sys/fs/cgroup/cpuset/lxc/lxc/cpuset.cpus
+echo "0" > /sys/fs/cgroup/cpuset/lxc/lxc/cpuset.mems
 exit 0
