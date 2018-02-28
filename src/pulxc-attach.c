@@ -1,39 +1,77 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdbool.h>
+#define _GNU_SOURCE
+
 #include <pwd.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
-char buf[2000];
-char buf2[1000];
-const char key[] = "BASE_PATH";
-int main(){
-    FILE* fptr=fopen("/etc/pulxc/pulxc.conf","r");
-    bool find=false;
-    while(fgets(buf,2000,fptr)){
-        char *ptr= strtok(buf,"=\n");
-        if(strcmp(ptr,key)==0){
-            ptr=strtok(NULL,"=\n");
-            if(!ptr){
-                fprintf(stderr,"Failed to get base path from config\n");
-                return 1;
-            }
-            strncpy(buf2,ptr,999);
-            find=true;
+#include <unistd.h>
+
+#define KEY_BASE_PATH "BASE_PATH"
+
+int main() {
+    if (clearenv()) {
+        perror("Cannot clear environment variable\n");
+        return 1;
+    }
+
+    FILE *fptr = fopen("/etc/pulxc/pulxc.conf","r");
+    if (!fptr) {
+        perror("Cannot open /etc/pulxc/pulxc.conf");
+        return 1;
+    }
+
+    char *line = NULL, *basepath = NULL;
+    ssize_t n = 0;
+    while (getline(&line, &n, fptr) != -1) {
+        if (*line == '\n' || *line == '#') // empty line or comment
+            continue;
+
+        char *ptr = strtok(line, "=");
+        if (!ptr) {
+            fputs("bad config\n", stderr);
+            return 1;
         }
+
+        if (strcmp(ptr, KEY_BASE_PATH)) // wrong key
+            continue;
+
+        ptr = strtok(NULL, "\n");
+        if (!ptr) {
+            fputs("bad config\n", stderr);
+            return 1;
+        }
+
+        if (basepath)
+            free(basepath);
+        basepath = strdup(ptr);
     }
-    if(!find){
-        fprintf(stderr,"Failed to get base path from config\n");
+    free(line);
+
+    if (!basepath) {
+        fputs("missing required key '" KEY_BASE_PATH "' in config\n", stderr);
         return 1;
     }
-    //Avoid using getlogin for security issue
-    struct passwd* pw=getpwuid(getuid());
-    setreuid(geteuid(),geteuid());
-    if(clearenv()){
-        fprintf(stderr,"Failed to clear env\n");
+
+    char *lxcpath = NULL;
+    if (asprintf(&lxcpath, "%s/lxc", basepath) < 0) {
+        perror("asprintf");
         return 1;
     }
-    sprintf(buf,"/usr/bin/lxc-attach --clear-env -P %s/lxc -n \'%s\'",buf2,pw->pw_name);
-    system(buf);
+    free(basepath);
+
+    // Avoid using getlogin for security issue
+    struct passwd *pw = getpwuid(getuid());
+    setreuid(geteuid(), geteuid());
+
+    char *const argv[] = {
+        "/usr/bin/lxc-attach",
+        "--clear-env",
+        "-P", lxcpath,
+        "-n", pw->pw_name,
+        NULL,
+    };
+
+    execve(argv[0], argv, NULL);
 }
