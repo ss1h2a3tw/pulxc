@@ -25,6 +25,8 @@ read INSTALL.md for more info
 
 ## Usage
 
+`pulxc-attach` for normal user to attach
+
 `pulxc-create username` to create a lxc for the user
 
 `pulxc-destroy username` to destroy the lxc, you need to stop it first
