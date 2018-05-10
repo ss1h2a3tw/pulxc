@@ -7,7 +7,7 @@ If you are using archlinux, you can install from pulxc-git in AUR
 But you still need to configure sysctl and lxc-usernet
 
 ### Add conf to sysctl.d
-`kernel.uprivileged_userns_clone=1`
+`kernel.unprivileged_userns_clone=1`
 ### setup lxc-usernet
 ```
 #/etc/lxc/lxc-usernet
